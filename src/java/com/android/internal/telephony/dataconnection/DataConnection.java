@@ -1785,10 +1785,8 @@ public final class DataConnection extends StateMachine {
 
             boolean createNetworkAgent = true;
             // If a disconnect is already pending, avoid notifying all of connected
-            if (hasMessages(EVENT_DISCONNECT) ||
-                    hasMessages(EVENT_DISCONNECT_ALL) ||
-                    hasDeferredMessages(EVENT_DISCONNECT) ||
-                    hasDeferredMessages(EVENT_DISCONNECT_ALL)) {
+            if (DataConnection.this.getHandler().hasMessages(EVENT_DISCONNECT) ||
+                    DataConnection.this.getHandler().hasMessages(EVENT_DISCONNECT_ALL)) {
                 log("DcActiveState: skipping notifyAllOfConnected()");
                 createNetworkAgent = false;
             } else {
