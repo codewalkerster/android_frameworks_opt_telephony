@@ -633,17 +633,15 @@ final class GsmServiceStateTracker extends ServiceStateTracker {
                 && ((rule & SIMRecords.SPN_RULE_SHOW_SPN)
                         == SIMRecords.SPN_RULE_SHOW_SPN);
 
-        if (mPhone.getImsPhone() != null
+        if (!TextUtils.isEmpty(spn)
+                && mPhone.getImsPhone() != null
                 && ((ImsPhone) mPhone.getImsPhone()).isVowifiEnabled()) {
-            // In Wi-Fi Calling mode show SPN?+WiFi
+            // In Wi-Fi Calling mode show SPN+WiFi
             String formatVoice = mPhone.getContext().getText(
                     com.android.internal.R.string.wfcSpnFormat).toString();
             String formatData = mPhone.getContext().getText(
                     com.android.internal.R.string.wfcDataSpnFormat).toString();
-            String originalSpn = "";
-            if (!TextUtils.isEmpty(spn)) {
-                originalSpn = spn.trim();
-            }
+            String originalSpn = spn.trim();
             spn = String.format(formatVoice, originalSpn);
             dataSpn = String.format(formatData, originalSpn);
             showSpn = true;
