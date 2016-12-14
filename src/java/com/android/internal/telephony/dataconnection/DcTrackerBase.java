@@ -240,9 +240,6 @@ public abstract class DcTrackerBase extends Handler {
     //        really a lower power mode")
     protected boolean mIsScreenOn = true;
 
-    // Indicates if we found mvno-specific APNs in the full APN list.
-    protected boolean mMvnoMatched = false;
-
     /** Allows the generation of unique Id's for DataConnection objects */
     protected AtomicInteger mUniqueIdGenerator = new AtomicInteger(0);
 
@@ -713,7 +710,7 @@ public abstract class DcTrackerBase extends Handler {
                         }
                         return dunSetting;
                     }
-                } else if (mMvnoMatched == false) {
+                } else {
                     if (VDBG) log("fetchDunApn: global TETHER_DUN_APN dunSetting=" + dunSetting);
                     return dunSetting;
                 }
@@ -734,7 +731,7 @@ public abstract class DcTrackerBase extends Handler {
                         }
                         return dunSetting;
                     }
-                } else if (mMvnoMatched == false) {
+                } else {
                     retDunSetting = dunSetting;
                 }
             }
