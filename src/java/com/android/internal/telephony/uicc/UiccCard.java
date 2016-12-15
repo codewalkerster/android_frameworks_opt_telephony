@@ -19,8 +19,6 @@ package com.android.internal.telephony.uicc;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import android.app.ActivityManagerNative;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,9 +67,6 @@ import java.util.List;
 public class UiccCard {
     protected static final String LOG_TAG = "UiccCard";
     protected static final boolean DBG = true;
-
-    public static final String EXTRA_ICC_CARD_ADDED =
-            "com.android.internal.telephony.uicc.ICC_CARD_ADDED";
 
     private static final String OPERATOR_BRAND_OVERRIDE_PREFIX = "operator_branding_";
 
@@ -304,7 +299,7 @@ public class UiccCard {
     private void onIccSwap(boolean isAdded) {
 
         boolean isHotSwapSupported = mContext.getResources().getBoolean(
-                R.bool.config_hotswapCapable);
+                com.android.internal.R.bool.config_hotswapCapable);
 
         if (isHotSwapSupported) {
             log("onIccSwap: isHotSwapSupported is true, don't prompt for rebooting");
@@ -312,26 +307,7 @@ public class UiccCard {
         }
         log("onIccSwap: isHotSwapSupported is false, prompt for rebooting");
 
-        promptForRestart(isAdded);
-    }
-
-    private void promptForRestart(boolean isAdded) {
         synchronized (mLock) {
-            final Resources res = mContext.getResources();
-            final String dialogComponent = res.getString(
-                    R.string.config_iccHotswapPromptForRestartDialogComponent);
-            if (dialogComponent != null) {
-                Intent intent = new Intent().setComponent(ComponentName.unflattenFromString(
-                        dialogComponent)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .putExtra(EXTRA_ICC_CARD_ADDED, isAdded);
-                try {
-                    mContext.startActivity(intent);
-                    return;
-                } catch (ActivityNotFoundException e) {
-                    loge("Unable to find ICC hotswap prompt for restart activity: " + e);
-                }
-            }
-
             // TODO: Here we assume the device can't handle SIM hot-swap
             //      and has to reboot. We may want to add a property,
             //      e.g. REBOOT_ON_SIM_SWAP, to indicate if modem support
